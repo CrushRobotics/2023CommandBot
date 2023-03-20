@@ -34,7 +34,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     DifferentialDriveOdometry odometry;
   
-    Gyro gyro;
+    AHRS gyro;
 
     MotorControllerGroup motorControllerGroupLeft;
     MotorControllerGroup motorControllerGroupRight;
@@ -218,6 +218,11 @@ public class DriveSubsystem extends SubsystemBase {
     public double getHeading()
     {
         return gyro.getRotation2d().getDegrees();
+    }
+
+    public double getRoll()
+    {
+        return gyro.getRoll();
     }
 
     public double getTurnRate()
