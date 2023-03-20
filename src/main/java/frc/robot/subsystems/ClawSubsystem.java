@@ -5,9 +5,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static frc.robot.Constants.ClawConstants.*;
 
 public class ClawSubsystem extends SubsystemBase {
     private CANSparkMax gripMotor;
+    private CANSparkMax intakeMotor;
     private RelativeEncoder encoder;
 
     // placeholders for now
@@ -19,7 +21,8 @@ public class ClawSubsystem extends SubsystemBase {
     public void init()
     {
         // Setup motor
-        gripMotor = new CANSparkMax(11, MotorType.kBrushless);
+        gripMotor = new CANSparkMax(gripMotorPort, MotorType.kBrushless);
+        intakeMotor = new CANSparkMax(intakeMotorPort, MotorType.kBrushless);
 
         // Setup encoder
         encoder = gripMotor.getEncoder();
@@ -31,7 +34,11 @@ public class ClawSubsystem extends SubsystemBase {
     public void periodic()
     {
         // Log dashboard values
-        SmartDashboard.putNumber("Claw Position", encoder.getPosition());
+        if (encoder != null)
+        {
+            SmartDashboard.putNumber("Claw Position", encoder.getPosition());
+        }
+        
     }
 
     public double getDegrees()
@@ -39,6 +46,20 @@ public class ClawSubsystem extends SubsystemBase {
         // Position is returning number of rotations.
         // Multiply by 360 to get degrees. (One full rotation is 360 degrees)
         return encoder.getPosition() * 360;
+    }
+
+    /**
+     * Run at percent [-1, 1]
+     * @param speed
+     */
+    public void runIntake(double speed)
+    {
+        intakeMotor.set(speed);
+    }
+
+    public void disable() {
+        gripMotor.set(0);
+        intakeMotor.set(0);
     }
 
     public boolean isOpen()
@@ -53,7 +74,7 @@ public class ClawSubsystem extends SubsystemBase {
         return degrees <= minAngle;
     }
 
-    public void move(double speed)
+    public void moveClaw(double speed)
     {
         if (speed > 0 && isOpen())
         {
@@ -67,8 +88,10 @@ public class ClawSubsystem extends SubsystemBase {
         gripMotor.set(speed);
     }
 
-    public void resetEncoders()
-    {
-        encoder.setPosition(0);
+    public void resetEncoder(double position) {
+        encoder.setPosition(position);
+    }
+    public void resetEncoder() {
+        resetEncoder(0);
     }
 }

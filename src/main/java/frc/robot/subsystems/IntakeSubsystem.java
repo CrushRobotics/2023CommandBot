@@ -12,7 +12,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void init()
     {
         // Setup motor
-        intakeMotor = new CANSparkMax(10, MotorType.kBrushless);
+        intakeMotor = new CANSparkMax(8, MotorType.kBrushless);
 
         // Setup encoder
         encoder = intakeMotor.getEncoder();

@@ -62,14 +62,12 @@ public class DriveSubsystem extends SubsystemBase {
         leftLeader = new CANSparkMax(1, MotorType.kBrushless);
         motorControllerGroupLeft = new MotorControllerGroup(
         leftLeader,
-            new CANSparkMax(3, MotorType.kBrushless),
-            new CANSparkMax(5, MotorType.kBrushless));
+            new CANSparkMax(3, MotorType.kBrushless));
         
         rightLeader = new CANSparkMax(2, MotorType.kBrushless);
         motorControllerGroupRight = new MotorControllerGroup(
             rightLeader,
-            new CANSparkMax(4, MotorType.kBrushless),
-            new CANSparkMax(6, MotorType.kBrushless));
+            new CANSparkMax(4, MotorType.kBrushless));
 
         motorControllerGroupRight.setInverted(true);
 
@@ -225,5 +223,20 @@ public class DriveSubsystem extends SubsystemBase {
     public double getTurnRate()
     {
         return -gyro.getRate();
+    }
+
+    public void setTurnSpeed(double turnSpeed)
+    {
+        diffDrive.curvatureDrive(0, turnSpeed, true);
+    }
+
+    public double getLeftPosition()
+    {
+        return leftEncoder.getPosition();
+    }
+
+    public double getRightPosition()
+    {
+        return rightEncoder.getPosition();
     }
 }

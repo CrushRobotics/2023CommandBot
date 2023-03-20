@@ -4,7 +4,10 @@
 
 package frc.robot.commands.auto;
 
+import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.RobotRotateCommand;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,6 +18,13 @@ public final class Autos {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   }
   
+  public static CommandBase scoreTwiceAuto(DriveSubsystem driveSubsystem)
+  {
+    return Commands.sequence(
+      new DriveDistanceCommand(driveSubsystem, 5),
+      new RobotRotateCommand(driveSubsystem, 90), 
+      new DriveDistanceCommand(driveSubsystem, 3));
+  }
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
