@@ -44,10 +44,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightElevatorMotor = new CANSparkMax(6, MotorType.kBrushless);
         rightElevatorMotor.follow(leftElevatorMotor, true);
 
- 
-        
-
-
         encoder = leftElevatorMotor.getEncoder();
 
         // When the match starts we should assume that the elevator is either at the
@@ -61,21 +57,9 @@ public class ElevatorSubsystem extends SubsystemBase {
          * gear ratio: 1:27
          * gear diameter: 22 teeth / 20 for diametral pitch? 
          * I am unsure if this is what we're looking for
-         *
-         * 30 inches rated as 1.5 position
-         * 1 position = 20 inches
-         * 39.37 inches in a meter
-         * 1.9685 position to meter
-         * 
-         * 42 pulses per rev for motor
-         * 
-         * Number of pulses in rotation of output gear
-         *     42 * 27 
-         * 
-         *  (1/42.0) * (1/27.0) * (Units.inchesToMeters(1.1) * Math.PI)
          */
         
-        encoder.setPositionConversionFactor(Units.inchesToMeters(1.1) * Math.PI / 27.0);
+        encoder.setPositionConversionFactor((Units.inchesToMeters(1.1) * Math.PI) / 27.0);
 
         leftElevatorMotor.burnFlash();
     }

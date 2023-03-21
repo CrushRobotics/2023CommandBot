@@ -1,0 +1,41 @@
+Drive Train Controller 
+- Right bumper 50%
+- Left bumper 30%
+
+
+
+- Controllers
+    - Drive Train Controller
+        Left Joystick
+            Movement
+        Right Joystick
+            Rotation
+        X
+        A
+        B
+        Y
+        Left Bumper
+            30% speed
+        Right Bumper
+            50% speed
+    - Elevator/Arm Controller
+        Left Joystick
+            Elevator control
+        Right Joystick
+            Claw control
+        Y
+            Top Setpoint
+        X
+            Activate Intake
+        A
+            Bottom Setpoint
+        B
+            Mid setpoint
+        Left Trigger
+            Cone
+        Right Trigger    
+            Cube
+
+
+- Arm angle
+- 
