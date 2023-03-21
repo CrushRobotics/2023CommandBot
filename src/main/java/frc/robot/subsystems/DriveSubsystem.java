@@ -31,6 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
     double WHEEL_DIAMETER = Units.inchesToMeters(5); 
     double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     double WHEEL_GEAR_RATIO = .75;
+    double dampenFactor = 1.0;
 
     DifferentialDriveOdometry odometry;
   
@@ -190,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
     
     public void arcadeDrive(double fwd, double rot)
     {
-        diffDrive.arcadeDrive(fwd, rot);
+        diffDrive.arcadeDrive(fwd * dampenFactor, rot);
     }
 
     public void tankDriveVolts(double left, double right)
@@ -243,5 +244,10 @@ public class DriveSubsystem extends SubsystemBase {
     public double getRightPosition()
     {
         return rightEncoder.getPosition();
+    }
+
+    public void setDampenFactor(double dampen)
+    {
+        dampenFactor = dampen;
     }
 }

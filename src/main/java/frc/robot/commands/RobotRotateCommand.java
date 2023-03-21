@@ -7,6 +7,7 @@ public class RobotRotateCommand extends CommandBase {
     private final DriveSubsystem driveSubsystem;
     private final double rotation;
     private double startAngle;
+    private double endAngle;
 
     public RobotRotateCommand (DriveSubsystem driveSubsystem, double rotation)
     {
@@ -20,13 +21,32 @@ public class RobotRotateCommand extends CommandBase {
     {
         // Get the angle from the gyro
         startAngle = driveSubsystem.getHeading();
+        endAngle = startAngle + rotation;
+
+        if (endAngle <= -180)
+        {
+            endAngle = 180 - (Math.abs(endAngle) - 180);
+        }
+
+        if (endAngle > 180)
+        {
+            endAngle = -180 + (Math.abs(endAngle) - 180);
+        }
     }
 
     @Override 
     public void execute()
     {
         // Tell bot to rotate
-        driveSubsystem.setTurnSpeed(0.5);
+        if (rotation > 0)
+        {
+            driveSubsystem.setTurnSpeed(0.5);
+        }
+        else 
+        {
+            driveSubsystem.setTurnSpeed(-0.5);
+        }
+
     }
 
     @Override 

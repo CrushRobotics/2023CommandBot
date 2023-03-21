@@ -18,6 +18,7 @@ Drive Train Controller
             30% speed
         Right Bumper
             50% speed
+
     - Elevator/Arm Controller
         Left Joystick
             Elevator control
@@ -32,10 +33,44 @@ Drive Train Controller
         B
             Mid setpoint
         Left Trigger
-            Cone
+            Close Cone
         Right Trigger    
-            Cube
+            Close Cube
 
 
 - Arm angle
 - 
+
+(-180, 180]
+
+0, -45 degrees
+
+-170, move -30 degrees
+ 
+-170 initial
+160 final
+-170 - 160
+
+-170 -20
+
+-170 -190
+180 - (190 - 170)
+180 - 20 = 160
+
+170 40
+170 210
+-180 + (210 - 170)
+-180 + 40
+-140
+
+
+-160 -40
+-160 -200
+180 - (200 - 180)
+160
+
+150 50
+150 200
+-180 + (200 - 180)
+-180 + 20
+-160

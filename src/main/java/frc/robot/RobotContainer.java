@@ -8,6 +8,7 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SuperStructureSetpoints;
+import frc.robot.commands.DampenDriveCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ManualElevatorComand;
 import frc.robot.commands.superStructure.ArmToPos;
@@ -46,7 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -130,7 +131,8 @@ public class RobotContainer {
 
   private Trigger armControllerLeftTrigger = new Trigger(() -> armController.getLeftTriggerAxis() > 0.1);
   private Trigger armControllerRightTrigger = new Trigger(() -> armController.getRightTriggerAxis() > 0.1);
-
+  private CommandXboxController armCommandController = new CommandXboxController(1);
+  private CommandXboxController driveCommandController = new CommandXboxController(0);
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -149,10 +151,18 @@ public class RobotContainer {
     // armControllerA.whileTrue(new RunCommand(() -> elevatorSubsystem.setElevatorVolts(elevatorOutputVolts.getDouble(0)))).onFalse(new InstantCommand(() -> elevatorSubsystem.disable()));
     // armControllerB.whileTrue(new RunCommand(() -> armSubsystem.setArmVolts(armOutputVolts.getDouble(0)))).onFalse(new InstantCommand(() -> armSubsystem.disable()));
 
+    // New controls for arm
+    armCommandController.leftStick().whileTrue(new ManualElevatorComand(elevatorSubsystem, () -> armController.getLeftY()));
+    armCommandController.y().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeHigh, () -> SuperStructureSetpoints.armScoreConeHigh, elevatorSubsystem, armSubsystem));
+    armCommandController.b().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeMid, () -> SuperStructureSetpoints.armScoreConeMid, elevatorSubsystem, armSubsystem));
+    armCommandController.a().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorIntakeGroundPos, () -> SuperStructureSetpoints.armIntakeGroundRot, elevatorSubsystem, armSubsystem));
 
+    driveCommandController.leftBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 0.2));
+    driveCommandController.rightBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 0.5));
+    
+    /* 
     armControllerLeftTrigger.whileTrue(new StartEndCommand(() -> isIntakeConfigCube = true, () -> isIntakeConfigCube = false));
     
-    armControllerA.whileTrue(new ManualElevatorComand(elevatorSubsystem));
     armControllerX.whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorIntakeGroundPos, () -> SuperStructureSetpoints.armIntakeGroundRot, elevatorSubsystem, armSubsystem));
     armControllerY.whileTrue(new SuperStructureToPos(
       () -> isIntakeConfigCube ? SuperStructureSetpoints.elevatorScoreConeHigh : SuperStructureSetpoints.elevatorScoreConeHigh, 
@@ -163,7 +173,7 @@ public class RobotContainer {
     
     armControllerLeftBumper.whileTrue(new ClawIntake(() -> ClawConstants.intakeSpeed, () -> true, clawSubsystem));
     armControllerLeftBumper.whileTrue(new ClawIntake(() -> ClawConstants.outtakeSpeed, () -> true, clawSubsystem));
-
+    */
 
     // Bindings for the driver controller 
     
