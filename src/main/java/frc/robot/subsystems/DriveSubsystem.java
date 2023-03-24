@@ -31,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
     double WHEEL_DIAMETER = Units.inchesToMeters(5); 
     double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     double WHEEL_GEAR_RATIO = .75;
-    double dampenFactor = 1.0;
+    double dampenFactor = DriveConstants.dampenFactor;
 
     DifferentialDriveOdometry odometry;
   
@@ -55,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
     EncoderSim rightEncoderSim;
 
     // Limiter used to limit how fast velocity is allowed to change
-    //final SlewRateLimiter limiter = new SlewRateLimiter(0.5);
+    final SlewRateLimiter limiter = new SlewRateLimiter(1.5);
 
 
     public void init() {
@@ -192,6 +192,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void arcadeDrive(double fwd, double rot)
     {
         diffDrive.arcadeDrive(fwd * dampenFactor, rot);
+        //diffDrive.arcadeDrive(limiter.calculate(fwd), rot);
     }
 
     public void tankDriveVolts(double left, double right)

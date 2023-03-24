@@ -26,8 +26,9 @@ public class ClawSubsystem extends SubsystemBase {
 
         // Setup encoder
         encoder = gripMotor.getEncoder();
-        encoder.setPositionConversionFactor(1.0/25.0);
+        encoder.setPositionConversionFactor(1.0);
         encoder.setPosition(0);
+        gripMotor.burnFlash();
     }
     
     @Override 
@@ -45,7 +46,7 @@ public class ClawSubsystem extends SubsystemBase {
     {
         // Position is returning number of rotations.
         // Multiply by 360 to get degrees. (One full rotation is 360 degrees)
-        return encoder.getPosition() * 360;
+        return encoder.getPosition() * encoderConversionFactor * 360;
     }
 
     /**
@@ -76,6 +77,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void moveClaw(double speed)
     {
+        /* 
         if (speed > 0 && isOpen())
         {
             speed = 0;
@@ -84,6 +86,7 @@ public class ClawSubsystem extends SubsystemBase {
         {
             speed = 0; 
         }
+        */
 
         gripMotor.set(speed);
     }

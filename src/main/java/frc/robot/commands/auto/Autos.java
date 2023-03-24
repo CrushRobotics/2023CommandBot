@@ -4,6 +4,7 @@
 
 package frc.robot.commands.auto;
 
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.RobotRotateCommand;
@@ -24,6 +25,19 @@ public final class Autos {
       new DriveDistanceCommand(driveSubsystem, 5),
       new RobotRotateCommand(driveSubsystem, 90), 
       new DriveDistanceCommand(driveSubsystem, 3));
+  }
+
+  public static CommandBase simpleDriveAwayAuto(DriveSubsystem driveSubsystem)
+  {
+    return new DriveDistanceCommand(driveSubsystem, 1);
+  }
+
+  public static CommandBase centerBalanceAuto(DriveSubsystem driveSubsystem)
+  {
+    return Commands.sequence(
+      new DriveDistanceCommand(driveSubsystem, -5),
+      new AutoBalanceCommand(driveSubsystem)
+    );
   }
 
   private Autos() {

@@ -28,8 +28,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double lastSpeed = 0;
     private double lastTime = Timer.getFPGATimestamp(); 
     
-    private final double minHeight = 0.0;
-    private final double maxHeight = -.25; // This is the highest it can possibly go, about 45 inches. We might want to change this to a smaller value for safety's sake?
+    private final double minHeight = -10;
+    private final double maxHeight = -140; // This is the highest it can possibly go, about 45 inches. We might want to change this to a smaller value for safety's sake?
 
     // ElevatorFeedforward feedforward = new ElevatorFeedforward(elevatorKS, elevatorKG, elevatorKV);
 
@@ -57,10 +57,12 @@ public class ElevatorSubsystem extends SubsystemBase {
          * gear ratio: 1:27
          * gear diameter: 22 teeth / 20 for diametral pitch? 
          * I am unsure if this is what we're looking for
+         * 
+         * 22 teeth
+         * .25 inches per teeth
          */
         
-        encoder.setPositionConversionFactor((Units.inchesToMeters(1.1) * Math.PI) / 27.0);
-
+        encoder.setPositionConversionFactor(1);
         leftElevatorMotor.burnFlash();
     }
     
@@ -144,11 +146,25 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getPosition()
     {
-        return encoder.getPosition();
+        return encoder.getPosition() * encoderConversionFactor;
     }
 
     public double getMaxPosition()
     {
         return maxHeight;
+    }
+
+    public void setSpeed(double speed)
+    {
+        if(speed > 0 && isAtBottom()){
+
+            speed = 0;
+        }
+        else if(speed < 0 && isAtTop()){
+
+            speed = 0;
+        }
+        
+        leftElevatorMotor.set(speed);
     }
 }

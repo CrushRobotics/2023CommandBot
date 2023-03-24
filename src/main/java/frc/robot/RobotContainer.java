@@ -11,6 +11,11 @@ import frc.robot.Constants.SuperStructureSetpoints;
 import frc.robot.commands.DampenDriveCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ManualElevatorComand;
+import frc.robot.commands.TestArmCommand;
+import frc.robot.commands.TestClawCommand;
+import frc.robot.commands.TestDriveCommand;
+import frc.robot.commands.TestElevatorCommand;
+import frc.robot.commands.auto.Autos;
 import frc.robot.commands.superStructure.ArmToPos;
 import frc.robot.commands.superStructure.ClawIntake;
 import frc.robot.commands.superStructure.ElevatorToPos;
@@ -19,6 +24,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 import java.util.Map;
 
@@ -48,7 +54,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
- private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
@@ -57,6 +63,8 @@ public class RobotContainer {
   private GenericEntry armOutputVolts;
 
   private boolean isIntakeConfigCube = false; // True for cone, false for cube
+
+  private boolean IS_IN_TEST_MODE = true;
 
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -71,25 +79,40 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    /* 
+    
     driveSubsystem.init();
     driveSubsystem.register();
-    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(controller, driveSubsystem));
 
     clawSubsystem.init();
     clawSubsystem.register();
     // clawSubsystem.setDefaultCommand(new DefaultClawCommand(armController, clawSubsystem));
-    */
+    
 
     elevatorSubsystem.init();
     elevatorSubsystem.register();
-    elevatorSubsystem.setDefaultCommand(new ElevatorToPos(() -> SuperStructureSetpoints.elevatorHomePos, elevatorSubsystem));
 
-    /* 
+     
     armSubsystem.init();
     armSubsystem.register();
-    armSubsystem.setDefaultCommand(new ArmToPos(() -> SuperStructureSetpoints.armHomeRot, armSubsystem));
-    */
+    
+
+    /** 
+     * DEFAULT COMMANDS FOR TESTING PURPOSES ONLY. 
+     */
+    if (IS_IN_TEST_MODE)
+    {
+      driveSubsystem.setDefaultCommand(new TestDriveCommand(driveSubsystem, controller));
+      armSubsystem.setDefaultCommand(new TestArmCommand(armSubsystem, armController));
+      elevatorSubsystem.setDefaultCommand(new TestElevatorCommand(elevatorSubsystem, armController));
+      clawSubsystem.setDefaultCommand(new TestClawCommand(clawSubsystem, armController));
+    }
+    else 
+    {
+      driveSubsystem.setDefaultCommand(new DefaultDriveCommand(controller, driveSubsystem));
+      //armSubsystem.setDefaultCommand(new ArmToPos(() -> SuperStructureSetpoints.armHomeRot, armSubsystem));
+      //elevatorSubsystem.setDefaultCommand(new ElevatorToPos(() -> SuperStructureSetpoints.elevatorHomePos, elevatorSubsystem));
+    }
+
     ShuffleboardTab poseFinder = Shuffleboard.getTab("poseFinder");
 
 
@@ -106,6 +129,9 @@ public class RobotContainer {
     .withProperties(Map.of("`min", 0, "max", 6, "Block increment", 0.05)).getEntry();
 
     m_chooser = new SendableChooser<>();
+    m_chooser.addOption("Simple Move Back", Autos.simpleDriveAwayAuto(driveSubsystem));
+    m_chooser.addOption("Center Auto Balance", Autos.simpleDriveAwayAuto(driveSubsystem));
+    SmartDashboard.putData("Auto Choices", m_chooser);
     
     /* 
     m_chooser.addOption("Place Cone", new ParallelCommandGroup(
@@ -113,7 +139,6 @@ public class RobotContainer {
       new ClawIntake(() -> elevatorSubsystem.isAtGoal() && true ? ClawConstants.outtakeSpeed : 0, () -> true, clawSubsystem) // Outtake the cone when the setpoints are reached
     ));
 
-    SmartDashboard.putData("Auto Choices", m_chooser);
     */
 
     // Configure the trigger bindings
@@ -151,14 +176,20 @@ public class RobotContainer {
     // armControllerA.whileTrue(new RunCommand(() -> elevatorSubsystem.setElevatorVolts(elevatorOutputVolts.getDouble(0)))).onFalse(new InstantCommand(() -> elevatorSubsystem.disable()));
     // armControllerB.whileTrue(new RunCommand(() -> armSubsystem.setArmVolts(armOutputVolts.getDouble(0)))).onFalse(new InstantCommand(() -> armSubsystem.disable()));
 
-    // New controls for arm
-    armCommandController.leftStick().whileTrue(new ManualElevatorComand(elevatorSubsystem, () -> armController.getLeftY()));
-    armCommandController.y().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeHigh, () -> SuperStructureSetpoints.armScoreConeHigh, elevatorSubsystem, armSubsystem));
-    armCommandController.b().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeMid, () -> SuperStructureSetpoints.armScoreConeMid, elevatorSubsystem, armSubsystem));
-    armCommandController.a().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorIntakeGroundPos, () -> SuperStructureSetpoints.armIntakeGroundRot, elevatorSubsystem, armSubsystem));
+    if (!IS_IN_TEST_MODE)
+    {
+      // New controls for arm
+      /* 
+      armCommandController.leftStick().whileTrue(new ManualElevatorComand(elevatorSubsystem, () -> armController.getLeftY()));
+      armCommandController.y().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeHigh, () -> SuperStructureSetpoints.armScoreConeHigh, elevatorSubsystem, armSubsystem));
+      armCommandController.b().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorScoreConeMid, () -> SuperStructureSetpoints.armScoreConeMid, elevatorSubsystem, armSubsystem));
+      armCommandController.a().whileTrue(new SuperStructureToPos(() -> SuperStructureSetpoints.elevatorIntakeGroundPos, () -> SuperStructureSetpoints.armIntakeGroundRot, elevatorSubsystem, armSubsystem));
+      */
 
-    driveCommandController.leftBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 0.2));
-    driveCommandController.rightBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 0.5));
+      driveCommandController.leftBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 0.2));
+      driveCommandController.rightBumper().whileTrue(new DampenDriveCommand(driveSubsystem, () -> 1.0));
+
+    }
     
     /* 
     armControllerLeftTrigger.whileTrue(new StartEndCommand(() -> isIntakeConfigCube = true, () -> isIntakeConfigCube = false));

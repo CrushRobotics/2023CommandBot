@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.DriveConstants;
 
 public class DampenDriveCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
@@ -13,7 +14,7 @@ public class DampenDriveCommand extends CommandBase {
     {
         this.driveSubsystem = driveSubsystem;
         this.dampenAmt = dampenAmt;
-        this.addRequirements(driveSubsystem);
+        //this.addRequirements(driveSubsystem);
     }
 
     @Override
@@ -25,6 +26,6 @@ public class DampenDriveCommand extends CommandBase {
     @Override
     public void end(boolean interrupted)
     {
-        driveSubsystem.setDampenFactor(1.0);
+        driveSubsystem.setDampenFactor(DriveConstants.dampenFactor);
     }
 }

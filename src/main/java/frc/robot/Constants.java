@@ -48,6 +48,7 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
+    public static final double dampenFactor = 0.6;
     public static final int kLeftMotor1Port = 0;
     public static final int kLeftMotor2Port = 1;
     public static final int kRightMotor1Port = 2;
@@ -104,6 +105,8 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
+    
+    public static final double encoderConversionFactor = (22.0 * 0.25) / 21;
 
     public static final int leftElevatorMotorPort = 5;
     public static final int rightElevatorMotorPort = 6;
@@ -145,6 +148,7 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static final double encoderConversionFactor = 1 / 125.0;
     public static final int armMotorPort = 9;
 
     // TODO Tune tolerance
@@ -164,6 +168,7 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
+    public static final double encoderConversionFactor = 1.0 / 25.0;
     public static final int gripMotorPort = 9;
     public static final int intakeMotorPort = 8;
 

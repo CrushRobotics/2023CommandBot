@@ -18,7 +18,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     // TODO: Need to set the minimum and maximum allowed angles for the arm
     private final double minAngle = 0;
-    private final double maxAngle = 70; // Could possibly be 80? I'll just say 60 for now
+    private final double maxAngle = 53; // Could possibly be 80? I'll just say 60 for now
 
     public void init() {
         // Setup motor
@@ -30,8 +30,9 @@ public class ArmSubsystem extends SubsystemBase {
         // Gear ratio is 1:125
         // Since we only care about radians of rotation I don't think
         // we need to factor the pitch diameter into the equation?
-        encoder.setPositionConversionFactor(1.0 / 125.0);
+        encoder.setPositionConversionFactor(1);
         encoder.setPosition(0);
+        armMotor.burnFlash();
 
         pidController = new PIDController(armKP, armKI, armKD);
         pidController.setTolerance(armPIDTolerance);
@@ -43,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param position in degrees
      */
     public void setArmPosition(double position) {
-        double pidCalc = pidController.calculate(getPosition(), position / 360); // Convert to rotations
+        double pidCalc = pidController.calculate(getPosition(), position); // Convert to rotations
         setArmVolts(pidCalc + armKF); // Arbitrary FeedForward. I think this is what 1339 is doing for our wrist, but
                                       // it might cause some weird behavior because KF is calculated at the point
                                       // where the motor has to work the hardest, when the wrist is straight up it
@@ -64,7 +65,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return encoder.getPosition();
+        return encoder.getPosition() * encoderConversionFactor * 360;
     }
 
     @Override 
@@ -74,6 +75,7 @@ public class ArmSubsystem extends SubsystemBase {
         {
             // Log dashboard values
             SmartDashboard.putNumber("Arm Position", encoder.getPosition());
+            SmartDashboard.putNumber("Arm Voltage: ", armMotor.getBusVoltage());
         }
     }
 
@@ -88,14 +90,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void swing(double speed)
     {
-
-        armMotor.set(speed);
-        if (speed < 0 && getDegrees() <= minAngle)
+        if (speed > 0 && getDegrees() <= minAngle)
         {
             speed = 0;
-        } else if (speed > 0 && getDegrees() >= maxAngle) {
+        } else if (speed < 0 && getDegrees() >= maxAngle) {
             speed = 0;
         }
+        armMotor.set(speed);
     }
 
     public void resetEncoder(double position) {

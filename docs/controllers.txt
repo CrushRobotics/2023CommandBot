@@ -74,3 +74,48 @@ Drive Train Controller
 -180 + (200 - 180)
 -180 + 20
 -160
+
+
+Questions to answer:
+    - Direction for arm control? (Negative vs Positive)
+    - Tune arm to stay in straight position. (PID controller values)
+    - Measure elevator positions (compare to actual measurements)
+        - Calculate set points
+    - Measure claw motor directions
+    - Measure intake motor directions
+    - Measure claw positions 
+        - Calculate set points
+        - Decide on starting position
+    - Measure required arm set points
+    - Measure drive train distance
+
+Elevator bottom: 0
+Elevator top: -155
+
+Arm: 40 degrees straight 
+53 min at bottom elevator
+83 when carriage in middle 
+
+
+- Deadband Static Method -- Done
+    - Elevator 
+    - Arm 
+    - Claw
+
+- Claw Control Triggers 
+
+- Auto Hold Class
+    - Takes in current encoder reading and compares with previous reading 
+        - If falling, provide new output value based on previous value 
+            Add .02
+            Double previous value 
+                .02, .04, .08, .16, .32 ...
+        - If rising, provide new output value based on previous value 
+            Minus .01
+            Previous value - (previous value / 4)
+                .32, .24, .18, 
+
+    - Supplies output value 
+
+    0.02, 0.04, 0.08, 0.16, 0.32
+
