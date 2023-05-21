@@ -17,8 +17,8 @@ public class ArmSubsystem extends SubsystemBase {
     private PIDController pidController;
 
     // TODO: Need to set the minimum and maximum allowed angles for the arm
-    private final double minAngle = 0;
-    private final double maxAngle = 53; // Could possibly be 80? I'll just say 60 for now
+    private final double minAngle = 56;
+    private final double maxAngle = 0; // Could possibly be 80? I'll just say 60 for now
 
     public void init() {
         // Setup motor
@@ -65,7 +65,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return encoder.getPosition() * encoderConversionFactor * 360;
+        return encoder.getPosition();
     }
 
     @Override 
@@ -90,12 +90,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void swing(double speed)
     {
-        if (speed > 0 && getDegrees() <= minAngle)
+        
+        if (speed > 0 && getPosition() > minAngle)
         {
             speed = 0;
-        } else if (speed < 0 && getDegrees() >= maxAngle) {
+        } else if (speed < 0 && getPosition() < maxAngle) {
             speed = 0;
         }
+        
         armMotor.set(speed);
     }
 

@@ -15,6 +15,7 @@ import frc.robot.commands.TestArmCommand;
 import frc.robot.commands.TestClawCommand;
 import frc.robot.commands.TestDriveCommand;
 import frc.robot.commands.TestElevatorCommand;
+import frc.robot.commands.TestIntakeCommand;
 import frc.robot.commands.auto.Autos;
 import frc.robot.commands.superStructure.ArmToPos;
 import frc.robot.commands.superStructure.ClawIntake;
@@ -57,6 +58,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 
   private GenericEntry elevatorOutputVolts;
@@ -81,8 +83,9 @@ public class RobotContainer {
   public RobotContainer() {
     
     driveSubsystem.init();
-    driveSubsystem.register();
+    //driveSubsystem.register();
 
+    
     clawSubsystem.init();
     clawSubsystem.register();
     // clawSubsystem.setDefaultCommand(new DefaultClawCommand(armController, clawSubsystem));
@@ -94,7 +97,7 @@ public class RobotContainer {
      
     armSubsystem.init();
     armSubsystem.register();
-    
+      
 
     /** 
      * DEFAULT COMMANDS FOR TESTING PURPOSES ONLY. 
@@ -105,6 +108,7 @@ public class RobotContainer {
       armSubsystem.setDefaultCommand(new TestArmCommand(armSubsystem, armController));
       elevatorSubsystem.setDefaultCommand(new TestElevatorCommand(elevatorSubsystem, armController));
       clawSubsystem.setDefaultCommand(new TestClawCommand(clawSubsystem, armController));
+      intakeSubsystem.setDefaultCommand(new TestIntakeCommand(intakeSubsystem, armController));
     }
     else 
     {
@@ -130,7 +134,7 @@ public class RobotContainer {
 
     m_chooser = new SendableChooser<>();
     m_chooser.addOption("Simple Move Back", Autos.simpleDriveAwayAuto(driveSubsystem));
-    m_chooser.addOption("Center Auto Balance", Autos.simpleDriveAwayAuto(driveSubsystem));
+    m_chooser.addOption("Score and Go", Autos.centerBalanceAuto(driveSubsystem));
     SmartDashboard.putData("Auto Choices", m_chooser);
     
     /* 
@@ -221,8 +225,10 @@ public class RobotContainer {
   }
 
   public void resetAllEncoders() {
+    
     elevatorSubsystem.resetEncoder();
     armSubsystem.resetEncoder();
     clawSubsystem.resetEncoder();
+    
   }
 }

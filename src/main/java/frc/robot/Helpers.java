@@ -11,6 +11,11 @@ public class Helpers {
 
     public static double SquareInput(double input)
     {
-        return input * input;
+        var squared = input * input;
+        
+        if (input < 0)
+            return -squared;
+
+        return squared;
     }
 }

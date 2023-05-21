@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.VecBuilder;
@@ -130,6 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
         // Log dashboard values
         SmartDashboard.putNumber("Drive Left Position", leftEncoder.getPosition());
         SmartDashboard.putNumber("Drive Right Position", rightEncoder.getPosition());
+        SmartDashboard.putNumber("Roll", gyro.getRoll());
 
         // TANK DRIVE CODE 
         /*
@@ -250,5 +252,16 @@ public class DriveSubsystem extends SubsystemBase {
     public void setDampenFactor(double dampen)
     {
         dampenFactor = dampen;
+    }
+
+    public void setBrakeMode(boolean isBrake)
+    {
+        if (isBrake)
+        {
+            leftLeader.setIdleMode(IdleMode.kBrake);
+        }
+        else {
+            leftLeader.setIdleMode(IdleMode.kBrake);
+        }
     }
 }

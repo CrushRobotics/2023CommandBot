@@ -22,7 +22,7 @@ public class TestClawCommand extends CommandBase {
         // Claw section
         var leftValue = controller.getLeftTriggerAxis();
         var rightValue = controller.getRightTriggerAxis();
-        var value = leftValue > 0 ? leftValue : -rightValue;
+        var value = leftValue > 0.1 ? leftValue : -rightValue;
 
         subsystem.moveClaw(Helpers.FilterDeadband(Helpers.SquareInput(value)));
 

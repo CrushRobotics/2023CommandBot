@@ -169,8 +169,8 @@ public final class Constants {
 
   public static final class ClawConstants {
     public static final double encoderConversionFactor = 1.0 / 25.0;
-    public static final int gripMotorPort = 9;
-    public static final int intakeMotorPort = 8;
+    public static final int gripMotorPort = 8;
+    public static final int intakeMotorPort = 9;
 
     public static final double intakeSpeed = 0.5;
     public static final double outtakeSpeed = -0.5;

@@ -104,18 +104,16 @@ Arm: 40 degrees straight
 
 - Claw Control Triggers 
 
+- Turn on brake mode for claw motor controller? 
+    - I think it's already on?
+
 - Auto Hold Class
-    - Takes in current encoder reading and compares with previous reading 
-        - If falling, provide new output value based on previous value 
-            Add .02
-            Double previous value 
-                .02, .04, .08, .16, .32 ...
-        - If rising, provide new output value based on previous value 
-            Minus .01
-            Previous value - (previous value / 4)
-                .32, .24, .18, 
+    - Stricly experimental!
 
-    - Supplies output value 
+.3 Back 
+22.5 inches bumper from scoring area 
 
-    0.02, 0.04, 0.08, 0.16, 0.32
+
+56 minumum 
+
 

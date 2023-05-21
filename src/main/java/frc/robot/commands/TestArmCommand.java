@@ -22,7 +22,7 @@ public class TestArmCommand extends CommandBase {
     @Override
     public void execute()
     {
-        var moveSpeed = Helpers.FilterDeadband(Helpers.SquareInput(controller.getLeftY()));
+        var moveSpeed = Helpers.FilterDeadband(Helpers.SquareInput(controller.getRightY()));
         subsystem.swing(moveSpeed);
 
         /* 
